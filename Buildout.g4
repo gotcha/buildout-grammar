@@ -1,21 +1,21 @@
 grammar Buildout;
 
-buildout: (section)+;
+buildout: (WS* '\n')* (section)+;
 
-section: section_header (key_value)* ;
+section: section_header WS* (key_value)* ;
 section_header: '[' section_name ']' ('\n' | EOF ) ;
 section_name: ID ;
 
-key_value: key_value_assign | key_value_add | key_value_remove ;
-
-key_value_assign: key WS* '=' values;
-key_value_add: key WS* '+=' values;
-key_value_remove: key WS* '-=' values;
+key_value: key WS* operator values;
+operator: assign | add | remove;
+assign: '=';
+add: '+=';
+remove: '-=';
 
 values: WS* value (WS+ value)* WS* '\n'? EOF?  ('\n' WS+ value (WS+ value)? WS* '\n'? EOF? )? ;
 
 key: ID ;
 value: ID;
 
-ID: [a-z0-9]+ ;
+ID: [a-z_0-9]+ ;
 WS : [ \t\r\n]+ ;
